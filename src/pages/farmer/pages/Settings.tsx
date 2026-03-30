@@ -9,7 +9,6 @@ import {
   Plus,
   ArrowRight,
   Loader2,
-  Search,
   CheckCircle2,
   LogOut,
 } from "lucide-react";
