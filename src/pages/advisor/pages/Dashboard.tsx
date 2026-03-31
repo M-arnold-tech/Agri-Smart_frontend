@@ -1,18 +1,41 @@
 import React, { useEffect } from "react";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { Users, AlertCircle, FileText, CheckCircle2, Loader2, MessageSquare, ArrowRight } from "lucide-react";
+import { Users, AlertCircle, FileText, CheckCircle2, Loader2, MessageSquare, ArrowRight, Upload } from "lucide-react";
 import useAdvisor from "../../../hooks/useAdvisor";
 import useChat from "../../../hooks/useChat";
+import useKnowledgeBase from "../../../hooks/useKnowledgeBase";
 import { Link } from "react-router-dom";
 
 export const AdvisorDashboard: React.FC = () => {
   const { stats, isLoading: advisorLoading } = useAdvisor();
   const { conversations, fetchConversations, isLoading: chatLoading } = useChat();
+  const { uploadResource, isLoading: uploadLoading, refreshResources } = useKnowledgeBase();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchConversations();
   }, [fetchConversations]);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", file.name.split(".")[0]);
+    formData.append("type", file.type.includes("pdf") ? "PDF" : "GUIDE");
+
+    const success = await uploadResource(formData);
+    if (success) {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      refreshResources();
+    }
+  };
 
   const isLoading = advisorLoading || chatLoading;
 
@@ -125,16 +148,28 @@ export const AdvisorDashboard: React.FC = () => {
             <div className="absolute top-0 right-0 p-8 transform translate-x-4 -translate-y-4 opacity-10 group-hover:scale-110 transition-transform">
                <FileText size={120} />
             </div>
-            <div className="relative z-10">
+            <div className="relative z-10 w-full">
               <h3 className="text-2xl font-bold mb-2">Publish Knowledge</h3>
               <p className="text-sm opacity-90 leading-relaxed font-medium">
                 Support your farmers by uploading updated agronomy guides and market trends.
               </p>
-              <Link to="/advisor/knowledge">
-                <Button variant="secondary" fullWidth className="mt-8 rounded-2xl py-6 font-bold uppercase tracking-widest shadow-lg shadow-black/10">
-                  Upload Resource
-                </Button>
-              </Link>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                accept=".pdf,.doc,.docx,.txt"
+              />
+              <Button 
+                variant="secondary" 
+                fullWidth 
+                className="mt-8 rounded-2xl py-6 font-bold uppercase tracking-widest shadow-lg shadow-black/10"
+                onClick={handleUploadClick}
+                disabled={uploadLoading}
+              >
+                {uploadLoading ? <Loader2 className="animate-spin mr-2" size={18} /> : <Upload size={18} className="mr-2" />}
+                Quick Upload
+              </Button>
             </div>
           </Card>
 

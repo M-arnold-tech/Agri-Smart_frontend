@@ -84,13 +84,13 @@ export const AdvisorFarmers: React.FC = () => {
                          <span className="text-xs font-bold text-text-main">Managed Crops</span>
                       </div>
                       <div className="flex gap-1">
-                         {farmer.crops.slice(0, 2).map((crop, i) => (
+                         {farmer.crops?.slice(0, 2).map((crop, i) => (
                            <span key={i} className="text-[10px] bg-gray-50 text-gray-500 font-black px-2 py-0.5 rounded-md border border-gray-100 uppercase tracking-tighter">
                              {crop}
                            </span>
                          ))}
-                         {farmer.crops.length > 2 && (
-                           <span className="text-[10px] text-gray-400 font-bold self-center">+{farmer.crops.length - 2}</span>
+                         {(farmer.crops?.length || 0) > 2 && (
+                           <span className="text-[10px] text-gray-400 font-bold self-center">+{(farmer.crops?.length || 0) - 2}</span>
                          )}
                       </div>
                    </div>
