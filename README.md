@@ -79,7 +79,7 @@ Then open the `.env` file and add the following:
 VITE_API_BASE_URL=https://agri-smart-bankend.onrender.com/api/v1
 ```
 
-> ⚠️ **Important:** All Vite environment variables **must** be prefixed with `VITE_` to be accessible in the browser. Never commit your `.env` file to version control — it is already listed in `.gitignore`.
+> **Important:** All Vite environment variables **must** be prefixed with `VITE_` to be accessible in the browser. Never commit your `.env` file to version control — it is already listed in `.gitignore`.
 
 If you are running your own local backend instead, replace the URL:
 

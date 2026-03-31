@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Sprout, Bell, Search, Menu, User, ShieldCheck } from "lucide-react";
+import useAuth from "../../../hooks/useAuth";
 
 interface AdvisorNavbarProps {
   onMenuClick: () => void;
@@ -9,6 +10,8 @@ interface AdvisorNavbarProps {
 export const AdvisorNavbar: React.FC<AdvisorNavbarProps> = ({
   onMenuClick,
 }) => {
+  const { user } = useAuth();
+
   return (
     <nav className="h-16 bg-surface border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-40">
       <div className="flex items-center gap-4">
@@ -58,14 +61,14 @@ export const AdvisorNavbar: React.FC<AdvisorNavbarProps> = ({
         </button>
         <div className="flex items-center gap-3 cursor-pointer p-1 rounded-full transition-all hover:bg-background group">
           <div className="bg-secondary/20 text-secondary-dark w-9 h-9 rounded-full flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all shadow-inner">
-            <User size={20} />
+            {user?.firstName ? user.firstName[0].toUpperCase() : <User size={20} />}
           </div>
           <div className="hidden md:block pr-2">
             <p className="text-xs font-bold text-text-main leading-none">
-              Sarah Advisor
+              {user ? `${user.firstName} ${user.lastName}` : "Sarah Advisor"}
             </p>
             <p className="text-[10px] text-text-muted uppercase tracking-wider font-bold mt-1">
-              Specialty: Agronomy
+              District: {user?.district || "Agronomy"}
             </p>
           </div>
         </div>

@@ -7,9 +7,22 @@ import {
   Activity,
   CheckCircle,
   XCircle,
+  Loader2,
 } from "lucide-react";
+import useAdmin from "../../../hooks/useAdmin";
 
 export const AdminDashboard: React.FC = () => {
+  const { stats, pendingAdvisors, isLoading, approveAdvisor } = useAdmin();
+
+  if (isLoading && !stats) {
+    return (
+      <div className="flex flex-col items-center justify-center p-20 text-center min-h-[60vh]">
+        <Loader2 className="text-primary animate-spin mb-4" size={48} />
+        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Loading Dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-8 animate-fade-in">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -28,22 +41,22 @@ export const AdminDashboard: React.FC = () => {
         <Card className="flex items-center gap-4">
           <Users size={32} className="text-primary shrink-0" />
           <div>
-            <div className="text-2xl font-bold text-text-main">1,245</div>
-            <div className="text-xs text-text-muted">Total Farmers</div>
+            <div className="text-2xl font-bold text-text-main">{stats?.totalUsers || 0}</div>
+            <div className="text-xs text-text-muted">Total Users</div>
           </div>
         </Card>
         <Card className="flex items-center gap-4">
           <ShieldCheck size={32} className="text-secondary shrink-0" />
           <div>
-            <div className="text-2xl font-bold text-text-main">48</div>
+            <div className="text-2xl font-bold text-text-main">{stats?.verifiedAdvisors || 0}</div>
             <div className="text-xs text-text-muted">Verified Advisors</div>
           </div>
         </Card>
         <Card className="flex items-center gap-4">
           <Activity size={32} className="text-[#0ea5e9] shrink-0" />
           <div>
-            <div className="text-2xl font-bold text-text-main">99.9%</div>
-            <div className="text-xs text-text-muted">System Uptime</div>
+            <div className="text-2xl font-bold text-text-main">{stats?.systemHealth || "Good"}</div>
+            <div className="text-xs text-text-muted">System Health</div>
           </div>
         </Card>
       </div>
@@ -54,53 +67,40 @@ export const AdminDashboard: React.FC = () => {
             Pending Advisor Approvals
           </h2>
           <Card className="flex flex-col gap-0 p-0 overflow-hidden divide-y divide-border">
-            <div className="flex items-center justify-between p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary-bg text-primary flex items-center justify-center font-bold text-lg">
-                  EK
+            {pendingAdvisors && pendingAdvisors.length > 0 ? (
+              pendingAdvisors.map((advisor) => (
+                <div key={advisor.id} className="flex items-center justify-between p-6 hover:bg-gray-50/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary-bg text-primary flex items-center justify-center font-bold text-lg uppercase">
+                      {advisor.firstName?.[0]}{advisor.lastName?.[0]}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-text-main text-lg">
+                        {advisor.firstName} {advisor.lastName}
+                      </h4>
+                      <p className="text-xs text-text-muted">
+                        District: {advisor.district || "Unknown"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" disabled={isLoading}>
+                      <XCircle size={16} className="mr-2" /> Reject
+                    </Button>
+                    <Button size="sm" onClick={() => approveAdvisor(advisor.id)} disabled={isLoading}>
+                      <CheckCircle size={16} className="mr-2" /> Approve
+                    </Button>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-text-main text-lg">
-                    Emmanuel K.
-                  </h4>
-                  <p className="text-xs text-text-muted">
-                    Agronomist • 5 years experience • Kigali
-                  </p>
-                </div>
+              ))
+            ) : (
+              <div className="p-12 text-center">
+                <ShieldCheck size={32} className="mx-auto text-gray-300 mb-4" />
+                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                  No pending approvals
+                </p>
               </div>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline">
-                  <XCircle size={16} className="mr-2" /> Reject
-                </Button>
-                <Button size="sm">
-                  <CheckCircle size={16} className="mr-2" /> Approve
-                </Button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary-bg text-primary flex items-center justify-center font-bold text-lg">
-                  AM
-                </div>
-                <div>
-                  <h4 className="font-semibold text-text-main text-lg">
-                    Alice M.
-                  </h4>
-                  <p className="text-xs text-text-muted">
-                    Soil Specialist • 3 years experience • Huye
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline">
-                  <XCircle size={16} className="mr-2" /> Reject
-                </Button>
-                <Button size="sm">
-                  <CheckCircle size={16} className="mr-2" /> Approve
-                </Button>
-              </div>
-            </div>
+            )}
           </Card>
         </div>
 
