@@ -15,6 +15,7 @@ interface Advisor {
   lastName: string;
   email: string;
   specialization: string[];
+  district?: string;
 }
 
 export default function useFarmer() {

@@ -136,7 +136,9 @@ export const FarmerDashboard: React.FC = () => {
                   <h4 className="font-semibold text-text-main text-lg">
                     {advisor ? `${advisor.firstName} ${advisor.lastName}` : "Sarah Advisor"}
                   </h4>
-                  <p className="text-xs text-text-muted">{advisor?.specialization?.join(", ") || "Agronomist"}</p>
+                  <p className="text-xs text-text-muted">
+                    {advisor?.district ? `${advisor.district} District` : (advisor?.specialization?.[0] || "Agronomist")}
+                  </p>
                 </div>
               </div>
               <div className="bg-[#dcfce7] text-[#166534] px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">

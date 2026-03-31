@@ -68,7 +68,7 @@ export const AdvisorNavbar: React.FC<AdvisorNavbarProps> = ({
               {user ? `${user.firstName} ${user.lastName}` : "Sarah Advisor"}
             </p>
             <p className="text-[10px] text-text-muted uppercase tracking-wider font-bold mt-1">
-              District: {user?.district || "Agronomy"}
+              District: {user?.district || "Not Assigned"}
             </p>
           </div>
         </div>
