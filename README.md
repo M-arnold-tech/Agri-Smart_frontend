@@ -4,7 +4,7 @@ A modern, role-based React dashboard for the **Agri-Smart** agricultural managem
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
