@@ -102,7 +102,7 @@ export const AdvisorFarmers: React.FC = () => {
                    variant="secondary" 
                    fullWidth 
                    className="rounded-xl h-11 text-[10px] font-black uppercase tracking-widest shadow-none hover:shadow-md transition-all"
-                   onClick={() => navigate("/advisor/chat")}
+                   onClick={() => navigate("/advisor/chat", { state: { selectedUserId: farmer.id } })}
                   >
                     <MessageSquare size={14} className="mr-2" />
                     Chat

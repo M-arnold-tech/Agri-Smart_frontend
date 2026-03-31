@@ -10,9 +10,15 @@ import {
 } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import useAuth from "../../../hooks/useAuth";
+import useFarmer from "../../../hooks/useFarmer";
+import { useNavigate, Link } from "react-router-dom";
 
 export const FarmerDashboard: React.FC = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
+  const { advisor, isLoading: farmerLoading } = useFarmer();
+  const navigate = useNavigate();
+
+  const isLoading = authLoading || farmerLoading;
 
   return (
     <div className="flex flex-col gap-8 animate-fade-in text-xs">
@@ -25,7 +31,7 @@ export const FarmerDashboard: React.FC = () => {
             Here is what is happening on your farm today.
           </p>
         </div>
-        <Button>
+        <Button onClick={() => navigate("/farmer/chat")}>
           <PhoneCall size={16} />
           Contact Advisor
         </Button>
@@ -120,22 +126,24 @@ export const FarmerDashboard: React.FC = () => {
           <h2 className="text-xl font-semibold text-text-main mb-1">
             Recent Consultations
           </h2>
-          <Card className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-primary-bg text-primary flex items-center justify-center font-bold text-lg">
-                SA
+          <Link to="/farmer/chat">
+            <Card className="flex items-center justify-between hover:bg-gray-50 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-primary-bg text-primary flex items-center justify-center font-bold text-lg">
+                  {advisor ? (advisor.firstName[0] + (advisor.lastName ? advisor.lastName[0] : "")) : "SA"}
+                </div>
+                <div>
+                  <h4 className="font-semibold text-text-main text-lg">
+                    {advisor ? `${advisor.firstName} ${advisor.lastName}` : "Sarah Advisor"}
+                  </h4>
+                  <p className="text-xs text-text-muted">{advisor?.specialization?.join(", ") || "Agronomist"}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-text-main text-lg">
-                  Sarah Advisor
-                </h4>
-                <p className="text-xs text-text-muted">Agronomist</p>
+              <div className="bg-[#dcfce7] text-[#166534] px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">
+                Available
               </div>
-            </div>
-            <div className="bg-[#dcfce7] text-[#166534] px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider">
-              Online
-            </div>
-          </Card>
+            </Card>
+          </Link>
 
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">

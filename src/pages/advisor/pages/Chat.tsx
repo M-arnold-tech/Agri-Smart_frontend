@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
 import {
   UserCircle2,
@@ -18,6 +19,7 @@ import useAuth from "../../../hooks/useAuth";
 
 export const AdvisorChat: React.FC = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const {
     conversations,
     messages,
@@ -33,6 +35,8 @@ export const AdvisorChat: React.FC = () => {
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<number | null>(null);
+
+  const selectedUserId = location.state?.selectedUserId;
 
   const activeId = activeChat ? activeChat.id : null;
   const { sendWsMessage, emitTyping, typingUsers } = useChatSocket(activeId, setMessages);
@@ -50,10 +54,19 @@ export const AdvisorChat: React.FC = () => {
   }, [activeChat, fetchHistory]);
 
   useEffect(() => {
-    if (!activeChat && conversations.length > 0) {
-      setActiveChat(conversations[0]);
+    if (conversations.length > 0) {
+      if (selectedUserId) {
+        const found = conversations.find(c => c.id === selectedUserId);
+        if (found) {
+          setActiveChat(found);
+        } else if (!activeChat) {
+          setActiveChat(conversations[0]);
+        }
+      } else if (!activeChat) {
+        setActiveChat(conversations[0]);
+      }
     }
-  }, [conversations, activeChat]);
+  }, [conversations, selectedUserId, activeChat]);
 
   useEffect(() => {
     if (scrollRef.current) {
