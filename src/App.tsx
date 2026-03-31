@@ -28,6 +28,9 @@ import { AdvisorPlaceholder } from "./pages/advisor/pages/Placeholder";
 
 // Admin Module
 import { AdminDashboard } from "./pages/admin/pages/Dashboard";
+import { AdminApprovals } from "./pages/admin/pages/Approvals";
+import { AdminUsers } from "./pages/admin/pages/Users";
+import { AdminLogs } from "./pages/admin/pages/ActivityLogs";
 import { AdminPlaceholder } from "./pages/admin/pages/Placeholder";
 
 import { Toaster } from "react-hot-toast";
@@ -70,9 +73,9 @@ const App: React.FC = () => {
       {/* System Admin Layout (Shared sidebar under /admin) */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
-        <Route path="approvals" element={<AdminPlaceholder title="Verify Advisors" />} />
-        <Route path="users" element={<AdminPlaceholder title="Manage Users" />} />
-        <Route path="activity" element={<AdminPlaceholder title="System Health Logs" />} />
+        <Route path="approvals" element={<AdminApprovals />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="activity" element={<AdminLogs />} />
         <Route path="settings" element={<AdminPlaceholder title="Platform Settings" />} />
       </Route>
       </Routes>
